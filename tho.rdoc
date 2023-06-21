@@ -1,0 +1,5 @@
+= tho
+
+Generate this with
+    tho _doc
+After you have described your command line interface

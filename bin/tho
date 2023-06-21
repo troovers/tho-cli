@@ -1,0 +1,158 @@
+#!/usr/bin/env ruby
+require 'gli'
+require 'tho'
+
+CHAR_ERROR = "\u274c"
+CHAR_WARNING = "\u25b2"
+CHAR_CHECK = "\u2714"
+CHAR_VERBOSE = "\u2139"
+CHAR_FLAG = "\u2691"
+
+COLOR_ESCAPES = {
+  :none => 0,
+  :bright => 1,
+  :black => 30,
+  :red => 31,
+  :green => 32,
+  :yellow => 33,
+  :blue => 34,
+  :magenta => 35,
+  :cyan => 36,
+  :white => 37,
+  :default => 39,
+}
+
+def colored( clr, text = nil )  
+  "\x1B[" + ( COLOR_ESCAPES[ clr ] || 0 ).to_s + 'm' + ( text ? text + "\x1B[0m" : "" )
+end
+
+def coloredBackground( clr, text = nil )  
+  "\x1B[" + ( ( COLOR_ESCAPES[ clr ] || 0 ) + 10 ).to_s + 'm' + ( text ?  text + "\x1B[0m" : "" )
+end
+
+# Global variables
+$verbose = false
+
+class App
+  extend GLI::App
+
+  program_desc 'An Unlock wrapper arround the flutter CLI'
+
+  version Tho::VERSION
+
+  subcommand_option_handling :normal
+  arguments :strict
+
+  desc 'Verbose logging'
+  switch [:v,:verbose]
+
+  # desc 'Configure the Flttr CLI'
+  # command :config do |c|
+  #   c.flag ['version-check'], 
+  #     :desc => 'Enable or disable the version check: true or false', 
+  #     :must_match => ['true', 'false']
+
+  #   c.action do |global_options,options,args|
+  #     Commands::Config.new(global_options.merge(options)).execute
+  #   end
+  # end
+
+  # desc 'Create a new project'
+  # command :create do |c|
+  #   c.action do |global_options,options,args|
+  #     Commands::Create.new().execute
+  #   end
+  # end
+
+  # desc 'Init a Flutter project for flavored configuration'
+  # command :init do |c|
+  #   c.action do |global_options,options,args|
+  #     Commands::Init.new(global_options.merge(options)).execute
+  #   end
+  # end
+
+  # desc 'Import data into the project, like translations'
+  # command :import do |c|
+  #   c.command :translations do |sc|
+  #     sc.action do |global_options,options,args|
+  #       Commands::TranslationsImport.new(global_options.merge(options)).execute
+  #     end
+  #   end
+  # end
+
+  # desc 'Run on a device or simulator'
+  # command :run do |c|
+  #   c.switch [:r,:release], 
+  #     :desc => 'Run in release mode, debug by default'
+
+  #   c.flag [:p,:platform], 
+  #     :desc => 'Specify platform, android or ios', 
+  #     :must_match => ["android", "ios"]
+
+  #   c.flag [:f,:flavor], 
+  #     :desc => 'Specify flavor' 
+
+  #   c.action do |global_options,options,args|
+  #     Commands::Run.new(global_options.merge(options)).execute
+  #   end
+  # end
+
+  # desc 'Build the app'
+  # command :build do |c|
+  #   c.switch [:r,:release], 
+  #     :desc => 'Run in release mode, debug by default'
+
+  #   c.flag [:p,:platform], 
+  #     :desc => 'Specify platform, android or ios', 
+  #     :must_match => ["android", "ios"],
+  #     :required => true
+
+  #   c.flag [:a,:artifact], 
+  #     :desc => 'Artifact type, required for android', 
+  #     :must_match => ["apk", "appbundle"],
+  #     :default_value => "apk"
+
+  #   c.flag [:f,:flavor], 
+  #     :desc => 'Specify flavor'
+
+  #   c.action do |global_options,options,args|
+  #     Commands::Build.new(global_options.merge(options)).execute
+  #   end
+  # end
+
+  # desc 'Upgrade Flttr'
+  # command :upgrade do |c|
+  #   c.action do |global_options,options,args|
+  #     Commands::Upgrade.new(global_options.merge(options)).execute
+  #   end
+  # end
+
+  pre do |global,command,options,args|
+
+    # Set verbose logging
+    $verbose = global[:verbose]
+
+    Settings.refresh
+
+    commandName = command.name_for_help.first
+    if Settings.get('version_check', true) == true && commandName != 'upgrade'
+      Updater.check
+    end
+
+    true
+  end
+
+  post do |global,command,options,args|
+    # Post logic here
+    # Use skips_post before a command to skip this
+    # block on that command only
+  end
+
+  on_error do |exception|
+    # Error logic here
+    # return false to skip default error handling
+    true
+  end
+end
+
+exit App.run(ARGV)
