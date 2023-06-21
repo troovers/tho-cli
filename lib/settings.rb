@@ -21,17 +21,39 @@ class Settings
     def self.get(key, default=nil)
         load
 
-        if @@config[key] == nil
-            return default
+        structure = key.split '.'
+
+        value = @@config
+
+        structure.each do |key|
+            if value[key] == nil
+                return default
+            end
+
+            value = value[key]
         end
 
-        return @@config[key]
+        return value
     end
 
     def self.write(key, value)
         refresh
 
-        @@config[key] = value
+        structure = key.split '.'
+
+        path = @@config
+
+        structure.each do |key|
+            if path[key] == nil
+                path[key] = {}
+            end
+
+            path = path[key]
+        end
+
+        path = value
+
+        puts structure
         
         File.write("#{@@configDirectory}/config.yaml", @@config.to_yaml)
     end

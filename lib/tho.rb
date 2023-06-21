@@ -1,4 +1,5 @@
 require 'tho/version.rb'
+require 'commands/create.rb'
 require 'commands/upgrade.rb'
 require 'commands/config.rb'
 require 'settings.rb'

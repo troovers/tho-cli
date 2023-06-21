@@ -1,0 +1,46 @@
+PATH
+  remote: .
+  specs:
+    tho (1.4.1)
+      dotenv (~> 2.8.1)
+      gli (~> 2.21.0)
+      jwt (~> 2.7.0)
+      tty-prompt (~> 0.23.1)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    dotenv (2.8.1)
+    gli (2.21.0)
+    jwt (2.7.1)
+    minitest (5.18.1)
+    pastel (0.8.0)
+      tty-color (~> 0.5)
+    rake (0.9.6)
+    rdoc (4.3.0)
+    tty-color (0.6.0)
+    tty-cursor (0.7.1)
+    tty-prompt (0.23.1)
+      pastel (~> 0.8)
+      tty-reader (~> 0.8)
+    tty-reader (0.9.0)
+      tty-cursor (~> 0.7)
+      tty-screen (~> 0.8)
+      wisper (~> 2.0)
+    tty-screen (0.8.1)
+    wisper (2.0.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  dotenv (>= 2.8.1)
+  jwt (>= 2.7.0)
+  minitest (~> 5.14)
+  rake (~> 0.9.2)
+  rdoc (~> 4.3)
+  tho!
+  tty-prompt (>= 0.23.1)
+
+BUNDLED WITH
+   2.1.4
