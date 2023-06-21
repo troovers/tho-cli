@@ -52,8 +52,6 @@ class Settings
         end
 
         path = value
-
-        puts structure
         
         File.write("#{@@configDirectory}/config.yaml", @@config.to_yaml)
     end

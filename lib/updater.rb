@@ -10,6 +10,8 @@ class Updater
             puts colored :default, "#{CHAR_VERBOSE} Fetching the latest release from Github:" unless !$verbose
             puts colored :default, "#{CHAR_VERBOSE} #{url}" unless !$verbose
 
+            response = JSON.load(URI.open(url))
+
             releaseName = (response['name'] || '0.1.0').tr('^0-9.', '')
 
             puts colored :default, "#{CHAR_VERBOSE} Latest version is: #{releaseName}" unless !$verbose

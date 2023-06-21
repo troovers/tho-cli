@@ -34,7 +34,6 @@ module Commands
             end
 
             puts colored :default, "\n#{CHAR_VERBOSE} Writing updates to settings" unless !$verbose
-            pp config unless !$verbose
 
             Settings.update(config)
         end
