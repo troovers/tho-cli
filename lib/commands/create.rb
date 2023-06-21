@@ -11,7 +11,7 @@ module Commands
             @@category = category
             @@args = {}
 
-            if category == 'password'
+            if category == 'string'
                 @@args = args.select { |key, value| ['length', 'symbols', 'digits'].include?(key) && !value.nil?  }
             end
 
@@ -20,16 +20,16 @@ module Commands
 
         def execute
 
-            if @@category == 'password'
-                create_password
+            if @@category == 'string'
+                create_string
             elsif @@category == 'uuid'
                 create_uuid
             end
 
         end
 
-        def create_password
-            config = Settings::get('passwords', {})
+        def create_string
+            config = Settings::get('strings', {})
 
             characters = %w{ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z }
 
@@ -44,16 +44,16 @@ module Commands
 
             length = @@args['length'].to_i || config['length'] || 20
 
-            password = (0...length).map{ characters.to_a[rand(characters.size)] }.join
+            string = (0...length).map{ characters.to_a[rand(characters.size)] }.join
 
-            puts colored :green, "#{CHAR_CHECK} Your password: #{password}"
+            puts colored :green, "#{CHAR_CHECK} Your string: #{string}"
 
             copy_to_clipboard = @@prompt.yes?("Do you want me to copy it to your clipboard?") do |q|
                 q.default false
             end
 
             if copy_to_clipboard
-                `echo #{password} | pbcopy`
+                `echo #{passwstringord} | pbcopy`
             end
         end
 

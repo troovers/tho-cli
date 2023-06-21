@@ -13,7 +13,7 @@ module Commands
 
             if category == 'global'
                 args = args.select { |key, value| ['version-check'].include?(key) && !value.nil?  }
-            elsif category == 'passwords'
+            elsif category == 'strings'
                 args = args.select { |key, value| ['length', 'symbols', 'digits'].include?(key) && !value.nil?  }
             end
 
@@ -29,8 +29,8 @@ module Commands
 
             if @@category == 'global'
                 config = update_global_config(config)
-            elsif @@category == 'passwords'
-                config = update_passwords_config(config)
+            elsif @@category == 'strings'
+                config = update_strings_config(config)
             end
 
             puts colored :default, "\n#{CHAR_VERBOSE} Writing updates to settings" unless !$verbose
@@ -52,19 +52,19 @@ module Commands
             return config
         end
 
-        def update_passwords_config(config)
-            unless config.key? 'password'
-                config['passwords'] = {}
+        def update_strings_config(config)
+            unless config.key? 'string'
+                config['strings'] = {}
             end
 
             @@args.each do |key, value|
                 puts colored :default, "#{CHAR_VERBOSE} Updating #{key} to #{value}" unless !$verbose
 
                 if key == 'length'
-                    config['passwords'][key] = value.to_i
+                    config['strings'][key] = value.to_i
 
                 elsif key == 'symbols' || key == 'digits'
-                    config['passwords'][key] = value == 'true'
+                    config['strings'][key] = value == 'true'
 
                 end
             end

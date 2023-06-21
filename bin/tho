@@ -48,9 +48,9 @@ class App
 
   desc 'Create'
   command :create do |c|
-    c.command :password do |sc|
+    c.command :string do |sc|
       sc.flag ['length'], 
-        :desc => 'Default length of password'
+        :desc => 'Default length of string'
 
       sc.flag ['symbols'], 
         :desc => 'Use symbols',
@@ -61,7 +61,7 @@ class App
         :must_match => ['true', 'false']
 
       sc.action do |global_options,options,args|
-        Commands::Create.new('password', global_options.merge(options)).execute
+        Commands::Create.new('string', global_options.merge(options)).execute
       end
     end
 
@@ -82,9 +82,9 @@ class App
       Commands::Config.new('global', global_options.merge(options)).execute
     end
 
-    c.command :passwords do |sc|
+    c.command :strings do |sc|
       sc.flag ['length'], 
-        :desc => 'Default length of password'
+        :desc => 'Default length of string'
 
       sc.flag ['symbols'], 
         :desc => 'Use symbols',
@@ -95,7 +95,7 @@ class App
         :must_match => ['true', 'false']
 
       sc.action do |global_options,options,args|
-        Commands::Config.new('passwords', global_options.merge(options)).execute
+        Commands::Config.new('strings', global_options.merge(options)).execute
       end
     end
   end
