@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tho (0.1.0)
+    tho (0.1.1)
       dotenv (~> 2.8.1)
       gli (~> 2.21.0)
       jwt (~> 2.7.0)

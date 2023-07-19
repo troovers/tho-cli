@@ -11,9 +11,15 @@ module Commands
             @@category = category
             @@args = {}
 
+            enabledKeys = []
+
             if category == 'string'
-                @@args = args.select { |key, value| ['length', 'symbols', 'digits'].include?(key) && !value.nil?  }
+                enabledKeys = ['length', 'symbols', 'digits', 'copy']
+            elsif category == 'uuid'
+                enabledKeys = ['copy']
             end
+
+            @@args = args.select { |key, value| enabledKeys.include?(key) && !value.nil?  }
 
             @@prompt = TTY::Prompt.new
         end
@@ -38,23 +44,16 @@ module Commands
             end
 
             if @@args['symbols'] != 'false' && (config['symbols'] || @@args['symbols'] == 'true' || false)
-                characters.concat ["#", "[", "]", "{", "}", "/"]
-                characters.concat %w{ ! @ $ % ^ & * ( ) - _ = + ; : \ | , < > . ? }
+                characters.concat ["#", "[", "]", "{", "}", "/", "|", "!", "@", "$", "%", "^", "&", "*", "(", ")", "-", "_", "=", "+", ";", ":", "\\", ",", "<", ">", ".", "?"]
             end
 
-            length = @@args['length'].to_i || config['length'] || 20
+            length = (@@args.key?('length') ? @@args['length'].to_i : nil) || config['length'] || 20
 
             string = (0...length).map{ characters.to_a[rand(characters.size)] }.join
 
             puts colored :green, "#{CHAR_CHECK} Your string: #{string}"
 
-            copy_to_clipboard = @@prompt.yes?("Do you want me to copy it to your clipboard?") do |q|
-                q.default false
-            end
-
-            if copy_to_clipboard
-                `echo #{passwstringord} | pbcopy`
-            end
+            _copy string
         end
 
         def create_uuid
@@ -62,12 +61,22 @@ module Commands
 
             puts colored :green, "#{CHAR_CHECK} Your UUID: #{uuid}"
 
-            copy_to_clipboard = @@prompt.yes?("Do you want me to copy it to your clipboard?") do |q|
-                q.default false
+            _copy uuid
+        end
+
+        def _copy(value)
+            if @@args['copy']
+                copy_to_clipboard = true
+            else
+                copy_to_clipboard = @@prompt.yes?("Do you want me to copy it to your clipboard?") do |q|
+                    q.default false
+                end
             end
 
             if copy_to_clipboard
-                `echo #{uuid} | pbcopy`
+                `echo #{value} | pbcopy`
+
+                puts colored :green, "#{CHAR_CHECK} Copied!"
             end
         end
     end

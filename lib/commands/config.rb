@@ -43,6 +43,7 @@ module Commands
             @@args.each do |key, value|
                 puts colored :default, "#{CHAR_VERBOSE} Updating #{key} to #{value}" unless !$verbose
 
+                # We need to parse strings to booleans
                 if key == 'version_check'
                     config[key] = value == 'true'
                 end
